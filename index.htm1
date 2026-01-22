@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sura | Saudi through local eyes</title>
+
+<!-- Fonts (Script قريب من الصورة + خط قراءة واضح) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!-- Leaflet (Map) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+:root{
+--bg:#082016; /* dark green */
+--panel:#0b2a1d;
+--panel2:#0d3122;
+--text:#ffffff;
+--muted:#cfe7dc;
+--muted2:#a8cdbb;
+--line:rgba(255,255,255,.12);
+--accent:#34d399;
+--accent2:#a7f3d0;
+--danger:#fb7185;
+--shadow: 0 18px 40px rgba(0,0,0,.35);
+--radius:18px;
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+background:
+radial-gradient(900px 500px at 10% 10%, rgba(52,211,153,.14), transparent 55%),
+radial-gradient(700px 400px at 90% 8%, rgba(167,243,208,.10), transparent 55%),
+var(--bg);
+color:var(--text);
+font-family: Inter, Arial, sans-serif;
+line-height:1.6;
+}
+a{color:var(--accent2);text-decoration:none}
+a:hover{opacity:.9}
+.wrap{max-width:1120px;margin:0 auto;padding:22px}
+.nav{
+display:flex;align-items:center;justify-content:space-between;gap:12px;
+padding:10px 0;
+}
+.brand-mini{display:flex;align-items:baseline;gap:10px}
+.brand-mini .logo{
+font-family:"Great Vibes", cursive;
+font-size:36px;
+letter-spacing:.3px;
+color:var(--text);
+line-height:1;
+}
+.brand-mini .tag{
+font-size:12px;color:var(--muted2);
+border:1px solid var(--line);
+padding:4px 10px;border-radius:999px;
+background:rgba(255,255,255,.04);
+white-space:nowrap;
+}
+.links{
+display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;
+font-size:13px;color:var(--muted);
+}
+.links a{
+color:var(--muted);
+padding:8px 10px;border-radius:999px;
+border:1px solid transparent;
+}
+.links a:hover{border-color:var(--line);background:rgba(255,255,255,.04)}
+.btn{
+display:inline-flex;align-items:center;gap:10px;
+padding:12px 16px;border-radius:14px;
+background:linear-gradient(180deg, rgba(52,211,153,.95), rgba(16,185,129,.85));
+color:#052014;font-weight:700;border:1px solid rgba(255,255,255,.14);
+box-shadow: 0 12px 28px rgba(16,185,129,.24);
+}
+.btn.secondary{
+background:rgba(255,255,255,.06);
+color:var(--text);
+border:1px solid var(--line);
+box-shadow:none;
+font-weight:600;
+}
+.hero{
+margin-top:12px;
+border:1px solid var(--line);
+background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+border-radius: calc(var(--radius) + 8px);
+box-shadow:var(--shadow);
+overflow:hidden;
+}
+.hero-inner{
+display:grid;
+grid-template-columns: 1.15fr .85fr;
+gap:18px;
+padding:28px;
+}
+@media (max-width: 980px){
+.hero-inner{grid-template-columns:1fr}
+}
+.hero h1{
+font-size:56px;margin:0 0 6px;line-height:1.05;
+font-family:"Great Vibes", cursive;
+letter-spacing:.4px;
+}
+.subtitle{
+margin:0 0 14px;
+font-size:18px;color:var(--muted);
+max-width:58ch;
+}
+.headline{
+margin:0 0 18px;
+font-size:28px;
+font-weight:800;
+letter-spacing:.2px;
+}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}
+.pill{
+font-size:12px;color:var(--muted);
+border:1px solid var(--line);
+background:rgba(255,255,255,.04);
+padding:6px 10px;border-radius:999px;
+}
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.panel{
+border:1px solid var(--line);
+background:rgba(255,255,255,.04);
+border-radius: var(--radius);
+padding:16px;
+}
+.panel h3{margin:0 0 10px;font-size:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width: 980px){.grid3{grid-template-columns:1fr}}
+.muted{color:var(--muted)}
+.muted2{color:var(--muted2)}
+.section{
+padding:24px 0;
+border-top:1px solid var(--line);
+margin-top:18px;
+}
+.section h2{
+margin:0 0 12px;
+font-size:22px;
+letter-spacing:.2px;
+}
+.two{
+display:grid;grid-template-columns:1fr 1fr;gap:14px;
+}
+@media (max-width: 980px){.two{grid-template-columns:1fr}}
+.cards{
+display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+}
+@media (max-width: 980px){.cards{grid-template-columns:1fr}}
+.card{
+border:1px solid var(--line);
+background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+border-radius: var(--radius);
+overflow:hidden;
+box-shadow: 0 12px 30px rgba(0,0,0,.25);
+display:flex;flex-direction:column;
+}
+.card .img{
+height:150px;
+background:linear-gradient(135deg, rgba(52,211,153,.18), rgba(167,243,208,.10));
+border-bottom:1px solid var(--line);
+position:relative;
+}
+/* صور وهمية (SVG) حسب نوع التجربة */
+.img svg{position:absolute;inset:0;width:100%;height:100%}
+.card .body{padding:14px}
+.kvs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.kv{
+font-size:12px;color:var(--muted);
+border:1px solid var(--line);
+background:rgba(255,255,255,.04);
+padding:5px 10px;border-radius:999px;
+}
+.price{
+margin-top:10px;
+display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+padding-top:10px;border-top:1px dashed rgba(255,255,255,.18);
+color:var(--accent2);
+font-weight:800;
+}
+.price small{color:var(--muted);font-weight:600}
+.card .actions{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap}
+.chip{
+display:inline-flex;align-items:center;gap:8px;
+font-size:12px;color:var(--muted);
+border:1px solid var(--line);
+background:rgba(255,255,255,.04);
+padding:7px 10px;border-radius:12px;
+}
+.guide{
+display:flex;gap:12px;align-items:flex-start;
+}
+.avatar{
+width:44px;height:44px;border-radius:14px;
+background:linear-gradient(135deg, rgba(167,243,208,.25), rgba(52,211,153,.18));
+border:1px solid var(--line);
+display:grid;place-items:center;
+font-weight:800;color:var(--accent2);
+flex: 0 0 auto;
+}
+.guide h4{margin:0;font-size:15px}
+.guide .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.stars{color:#fde68a}
+.hr{height:1px;background:var(--line);margin:12px 0}
+.list{margin:0;padding-left:18px;color:var(--muted)}
+.list li{margin:6px 0}
+.map-wrap{
+border:1px solid var(--line);
+border-radius: var(--radius);
+overflow:hidden;
+background:rgba(255,255,255,.03);
+box-shadow: var(--shadow);
+}
+#map{height:360px}
+.map-bar{
+display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;
+padding:12px 14px;border-top:1px solid var(--line);
+color:var(--muted);
+font-size:13px;
+}
+.map-bar .left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.badge{
+display:inline-flex;align-items:center;gap:8px;
+padding:7px 10px;border-radius:999px;
+border:1px solid var(--line);
+background:rgba(255,255,255,.04);
+color:var(--muted);
+font-size:12px;
+}
+.badge strong{color:var(--text)}
+.toast{
+position:fixed;right:16px;bottom:16px;
+max-width:420px;
+background:rgba(0,0,0,.55);
+border:1px solid rgba(255,255,255,.18);
+color:#fff;
+padding:12px 12px;
+border-radius:14px;
+box-shadow: 0 18px 40px rgba(0,0,0,.35);
+display:none;
+z-index:9999;
+backdrop-filter: blur(10px);
+font-size:13px;
+}
+footer{
+margin-top:26px;
+padding:16px 0 30px;
+color:var(--muted2);
+border-top:1px solid var(--line);
+font-size:13px;
+}
+.faq details{
+border:1px solid var(--line);
+background:rgba(255,255,255,.04);
+border-radius:14px;
+padding:12px 14px;
+margin:10px 0;
+}
+.faq summary{
+cursor:pointer;
+font-weight:700;
+}
+.tiny{
+font-size:12px;color:var(--muted2)
+}
+.form{
+display:grid;gap:10px;
+}
+.input{
+width:100%;
+padding:12px 12px;
+border-radius:14px;
+border:1px solid var(--line);
+background:rgba(255,255,255,.04);
+color:var(--text);
+outline:none;
+}
+.input::placeholder{color:rgba(255,255,255,.5)}
+.row{
+display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+@media(max-width:980px){.row{grid-template-columns:1fr}}
+.note{
+border:1px dashed rgba(167,243,208,.35);
+background:rgba(52,211,153,.07);
+border-radius:14px;
+padding:10px 12px;
+color:var(--muted);
+font-size:13px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="nav">
+<div class="brand-mini">
+<div class="logo">Sura</div>
+<div class="tag">Saudi experiences • Local guides</div>
+</div>
+<div class="links">
+<a href="#about">About</a>
+<a href="#features">Features</a>
+<a href="#experiences">Experiences</a>
+<a href="#guides">Guides</a>
+<a href="#map">Map</a>
+<a href="#support">Support</a>
+</div>
+</div>
+
+<div class="hero">
+<div class="hero-inner">
+<div>
+<h1>Sura</h1>
+<div class="headline">See Saudi Arabia through local eyes.</div>
+<p class="subtitle">
+Not a “tour route” — a real moment: a neighborhood story, a craft in motion, a heritage practice you can actually try.
+</p>
+
+<div class="pill-row">
+<span class="pill">City walks</span>
+<span class="pill">Heritage practices</span>
+<span class="pill">Arabic calligraphy</span>
+<span class="pill">Falconry & equestrian culture</span>
+<span class="pill">Map-based matching</span>
+</div>
+
+<div class="hero-cta">
+<a class="btn" href="#map" id="btnFindNearest">Find the nearest guide</a>
+<a class="btn secondary" href="#experiences">Browse experiences</a>
+</div>
+
+<div class="note" style="margin-top:14px">
+This is a demo landing page for “Sura”. Booking, payments, and accounts are showcased as a concept.
+</div>
+</div>
+
+<div class="panel">
+<h3>Quick overview</h3>
+<div class="grid3">
+<div class="panel">
+<div class="muted2">Why the name “Sura”?</div>
+<div style="font-weight:700;margin-top:4px">From “سُرى” — a calm night journey guided by meaning and light.</div>
+<div class="tiny" style="margin-top:6px">A gentle journey, not a checklist.</div>
+</div>
+<div class="panel">
+<div class="muted2">Vision</div>
+<div style="font-weight:700;margin-top:4px">To become the most trusted gateway to authentic Saudi local experiences.</div>
+</div>
+<div class="panel">
+<div class="muted2">Goals</div>
+<div class="tiny" style="margin-top:6px">
+• Empower locals as experience hosts<br/>
+• Offer safer, curated cultural practices<br/>
+• Make discovery effortless via map matching
+</div>
+</div>
+</div>
+<div class="hr"></div>
+<div class="tiny">Tip: Enable location to see the nearest guide on the map.</div>
+</div>
+</div>
+</div>
+
+<!-- ABOUT -->
+<div class="section" id="about">
+<h2>About Sura</h2>
+<div class="two">
+<div class="panel">
+<h3>What makes Sura different?</h3>
+<p class="muted" style="margin:0">
+Sura bridges travelers with local guides and “experience hosts” to live Saudi life from the inside —
+beyond big events and standard tours.
+</p>
+<div class="hr"></div>
+<ul class="list">
+<li><strong>Classic tours:</strong> city highlights, museums, landmarks.</li>
+<li><strong>Seasonal practices:</strong> equestrian culture, calligraphy, heritage crafts, falconry and more.</li>
+<li><strong>Map-based matching:</strong> open the map and book the closest verified guide.</li>
+</ul>
+</div>
+
+<div class="panel">
+<h3>How it works (Traveler)</h3>
+<ol class="list" style="padding-left:18px">
+<li>Download the app (App Store / Google Play)</li>
+<li>Choose your city</li>
+<li>Browse local guides (bio, languages, ratings, price)</li>
+<li>Select a ready-made tour (city walk, museums, landmarks)</li>
+<li>Request & coordinate — sometimes pay in-app</li>
+</ol>
+
+<div class="hr"></div>
+
+<h3>How it works (Guide)</h3>
+<ol class="list" style="padding-left:18px">
+<li>Register as a Guide</li>
+<li>Create a profile</li>
+<li>Add public tours / experiences</li>
+<li>Receive booking requests</li>
+<li>Turn location On/Off and set service radius (5–20 km)</li>
+</ol>
+</div>
+</div>
+</div>
+
+<!-- FEATURES -->
+<div class="section" id="features">
+<h2>Platform features</h2>
+<div class="cards">
+<div class="card">
+<div class="img">
+<svg viewBox="0 0 800 350" preserveAspectRatio="none">
+<defs>
+<linearGradient id="g1" x1="0" x2="1">
+<stop offset="0" stop-color="rgba(52,211,153,.30)"/>
+<stop offset="1" stop-color="rgba(167,243,208,.12)"/>
+</linearGradient>
+</defs>
+<rect width="800" height="350" fill="url(#g1)"/>
+<circle cx="160" cy="180" r="90" fill="rgba(255,255,255,.10)"/>
+<rect x="300" y="120" width="360" height="30" rx="15" fill="rgba(255,255,255,.10)"/>
+<rect x="300" y="170" width="280" height="26" rx="13" fill="rgba(255,255,255,.08)"/>
+<rect x="300" y="212" width="320" height="26" rx="13" fill="rgba(255,255,255,.06)"/>
+</svg>
+</div>
+<div class="body">
+<strong>Accounts & Profiles</strong>
+<div class="muted" style="margin-top:6px">Verified guide profiles, languages, ratings, and pricing clarity.</div>
+<div class="kvs">
+<span class="kv">Bio</span><span class="kv">Languages</span><span class="kv">Ratings</span><span class="kv">Hourly / tour pricing</span>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="img">
+<svg viewBox="0 0 800 350" preserveAspectRatio="none">
+<rect width="800" height="350" fill="rgba(52,211,153,.14)"/>
+<path d="M0 260 C 160 210, 260 320, 420 260 C 560 210, 640 320, 800 260 L800 350 L0 350 Z" fill="rgba(255,255,255,.10)"/>
+<rect x="110" y="80" width="580" height="180" rx="20" fill="rgba(0,0,0,.16)" stroke="rgba(255,255,255,.14)"/>
+<circle cx="170" cy="140" r="22" fill="rgba(255,255,255,.14)"/>
+<rect x="220" y="128" width="420" height="22" rx="11" fill="rgba(255,255,255,.12)"/>
+<rect x="220" y="170" width="320" height="20" rx="10" fill="rgba(255,255,255,.10)"/>
+</svg>
+</div>
+<div class="body">
+<strong>Booking / Request / Chat</strong>
+<div class="muted" style="margin-top:6px">Send a request, coordinate time, and keep everything in one place.</div>
+<div class="kvs">
+<span class="kv">Requests</span><span class="kv">Chat</span><span class="kv">Schedule</span><span class="kv">Notifications</span>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="img">
+<svg viewBox="0 0 800 350" preserveAspectRatio="none">
+<rect width="800" height="350" fill="rgba(167,243,208,.12)"/>
+<polygon points="120,280 220,140 320,280" fill="rgba(255,255,255,.12)"/>
+<polygon points="260,280 360,110 480,280" fill="rgba(255,255,255,.10)"/>
+<polygon points="420,280 520,150 620,280" fill="rgba(255,255,255,.08)"/>
+<rect x="140" y="70" width="520" height="36" rx="18" fill="rgba(0,0,0,.14)" stroke="rgba(255,255,255,.12)"/>
+</svg>
+</div>
+<div class="body">
+<strong>Reviews & Ratings</strong>
+<div class="muted" style="margin-top:6px">Trust built on real feedback after each experience.</div>
+<div class="kvs">
+<span class="kv">Verified reviews</span><span class="kv">Star rating</span><span class="kv">Safety notes</span>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="img">
+<svg viewBox="0 0 800 350" preserveAspectRatio="none">
+<rect width="800" height="350" fill="rgba(52,211,153,.12)"/>
+<rect x="130" y="90" width="540" height="190" rx="24" fill="rgba(0,0,0,.14)" stroke="rgba(255,255,255,.14)"/>
+<rect x="170" y="130" width="300" height="26" rx="13" fill="rgba(255,255,255,.12)"/>
+<rect x="170" y="170" width="380" height="22" rx="11" fill="rgba(255,255,255,.10)"/>
+<rect x="170" y="210" width="240" height="22" rx="11" fill="rgba(255,255,255,.08)"/>
+<circle cx="610" cy="185" r="46" fill="rgba(255,255,255,.12)"/>
+</svg>
+</div>
+<div class="body">
+<strong>Electronic Payments</strong>
+<div class="muted" style="margin-top:6px">In-app payments, receipts, and secure confirmations.</div>
+<div class="kvs">
+<span class="kv">Apple Pay</span><span class="kv">Cards</span><span class="kv">Invoices</span>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="img">
+<svg viewBox="0 0 800 350" preserveAspectRatio="none">
+<rect width="800" height="350" fill="rgba(167,243,208,.10)"/>
+<circle cx="260" cy="170" r="86" fill="rgba(255,255,255,.10)"/>
+<circle cx="470" cy="170" r="86" fill="rgba(255,255,255,.08)"/>
+<circle cx="380" cy="210" r="86" fill="rgba(255,255,255,.06)"/>
+<rect x="120" y="80" width="560" height="40" rx="20" fill="rgba(0,0,0,.12)" stroke="rgba(255,255,255,.14)"/>
+</svg>
+</div>
+<div class="body">
+<strong>Subscriptions</strong>
+<div class="muted" style="margin-top:6px">Traveler passes & guide premium profiles (concept).</div>
+<div class="kvs">
+<span class="kv">Traveler Pass</span><span class="kv">Guide Pro</span><span class="kv">Discounts</span>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="img">
+<svg viewBox="0 0 800 350" preserveAspectRatio="none">
+<rect width="800" height="350" fill="rgba(52,211,153,.10)"/>
+<path d="M160 260 C 220 150, 320 140, 380 210 C 440 280, 520 270, 560 210 C 600 150, 690 150, 720 230" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="10" stroke-linecap="round"/>
+<rect x="160" y="80" width="520" height="34" rx="17" fill="rgba(0,0,0,.12)" stroke="rgba(255,255,255,.14)"/>
+</svg>
+</div>
+<div class="body">
+<strong>Live Support</strong>
+<div class="muted" style="margin-top:6px">Help center, chat support, and dispute resolution flows.</div>
+<div class="kvs">
+<span class="kv">Help Center</span><span class="kv">Live chat</span><span class="kv">Refund policy</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- EXPERIENCES -->
+<div class="section" id="experiences">
+<h2>Experiences (demo listings)</h2>
+<p class="muted" style="margin-top:-4px">Sample experiences with date, time, guide, price, and details.</p>
+
+<div class="cards" id="experienceCards">
+<!-- cards injected by JS -->
+</div>
+</div>
+
+<!-- GUIDES -->
+<div class="section" id="guides">
+<h2>Guides (demo profiles)</h2>
+<div class="two">
+<div class="panel">
+<div id="guideList"></div>
+</div>
+
+<div class="panel">
+<h3>Reviews snapshot (demo)</h3>
+<div class="hr"></div>
+<div class="guide">
+<div class="avatar">L</div>
+<div>
+<h4>Layla A.</h4>
+<div class="meta"><span class="stars">★★★★★</span> “Felt like a friend showing me her city — not a tour.”</div>
+</div>
+</div>
+<div class="hr"></div>
+<div class="guide">
+<div class="avatar">O</div>
+<div>
+<h4>Omar S.</h4>
+<div class="meta"><span class="stars">★★★★☆</span> “Calligraphy session was calm and authentic. Loved the story behind the letters.”</div>
+</div>
+</div>
+<div class="hr"></div>
+<div class="guide">
+<div class="avatar">N</div>
+<div>
+<h4>Noah K.</h4>
+<div class="meta"><span class="stars">★★★★★</span> “Map matching made it easy — booked the closest guide in minutes.”</div>
+</div>
+</div>
+
+<div class="note" style="margin-top:12px">
+Payments, subscriptions, and accounts are showcased here as concept features for the MVP roadmap.
+</div>
+</div>
+</div>
+</div>
+
+<!-- MAP -->
+<div class="section" id="map">
+<h2>Map-based matching (Nearest guide)</h2>
+<p class="muted" style="margin-top:-4px">
+Enable location to find the closest available guide (demo pins). Guides can toggle their location On/Off and set service radius (5–20 km).
+</p>
+
+<div class="map-wrap">
+<div id="map"></div>
+<div class="map-bar">
+<div class="left">
+<span class="badge"><strong id="locStatus">Location:</strong> <span id="locText">Not enabled</span></span>
+<span class="badge"><strong>Nearest guide:</strong> <span id="nearestText">—</span></span>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="btn secondary" id="btnUseLocation" type="button">Enable location</button>
+<button class="btn" id="btnOpenNearest" type="button">Open nearest guide</button>
+</div>
+</div>
+</div>
+<div class="tiny" style="margin-top:10px">
+Note: This is a demo. In the real app, pins represent real guides with real-time availability and verified profiles.
+</div>
+</div>
+
+<!-- SUPPORT -->
+<div class="section" id="support">
+<h2>Support</h2>
+<div class="two">
+<div class="panel faq">
+<h3>Help center (FAQ)</h3>
+
+<details open>
+<summary>How do bookings work?</summary>
+<div class="muted" style="margin-top:8px">Choose a guide or experience, send a request, coordinate time, and confirm (pay in-app in the full product).</div>
+</details>
+
+<details>
+<summary>Is Sura a traditional tour app?</summary>
+<div class="muted" style="margin-top:8px">No. Sura emphasizes authentic local moments and heritage practices — beyond typical tours.</div>
+</details>
+
+<details>
+<summary>Refunds & cancellations</summary>
+<div class="muted" style="margin-top:8px">Demo policy: full refund 24h before start, partial refund within 24h. (To be defined with partners.)</div>
+</details>
+
+<details>
+<summary>Safety & verification</summary>
+<div class="muted" style="margin-top:8px">Demo policy: guide verification, clear meeting points, and post-experience reviews.</div>
+</details>
+
+<div class="note" style="margin-top:12px">
+Need help? In the final app, you’ll have live chat + email tickets + emergency escalation.
+</div>
+</div>
+
+<div class="panel">
+<h3>Contact (demo form)</h3>
+<form class="form" onsubmit="event.preventDefault(); toast('Message sent (demo). In the real product, this would create a support ticket.');">
+<div class="row">
+<input class="input" placeholder="Your name" required />
+<input class="input" placeholder="Email" type="email" required />
+</div>
+<input class="input" placeholder="Subject" required />
+<textarea class="input" placeholder="How can we help?" rows="5" required></textarea>
+<button class="btn" type="submit">Send</button>
+<div class="tiny">This form is a demo (static website). For real tickets, we connect a backend later.</div>
+</form>
+</div>
+</div>
+
+<footer>
+© Sura — Demo landing page • Dark green theme • White text • Map-based matching concept
+</footer>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+// ===== Demo Data =====
+const guides = [
+{
+id:"g1",
+name:"Faisal Al-Harbi",
+city:"Jeddah",
+languages:["Arabic","English"],
+rating:4.9,
+reviews:128,
+priceHour:120,
+onDuty:true,
+radiusKm:12,
+lat:21.4858, lng:39.1925,
+specialties:["Al-Balad walk","Local food stories","Photography spots"]
+},
+{
+id:"g2",
+name:"Noura Al-Shehri",
+city:"Jeddah",
+languages:["Arabic","English","Turkish"],
+rating:4.8,
+reviews:96,
+priceHour:150,
+onDuty:true,
+radiusKm:8,
+lat:21.5433, lng:39.1728,
+specialties:["Arabic calligraphy","Crafts & heritage","Women-friendly experiences"]
+},
+{
+id:"g3",
+name:"Saad Al-Otaibi",
+city:"Riyadh",
+languages:["Arabic","English"],
+rating:4.7,
+reviews:74,
+priceHour:180,
+onDuty:true,
+radiusKm:20,
+lat:24.7136, lng:46.6753,
+specialties:["Equestrian culture","Falconry intro","Desert etiquette"]
+},
+{
+id:"g4",
+name:"Hessa Al-Mutairi",
+city:"AlUla",
+languages:["Arabic","English"],
+rating:4.9,
+reviews:143,
+priceHour:220,
+onDuty:false, // Off
+radiusKm:15,
+lat:26.6084, lng:37.9232,
+specialties:["Old town stories","Rock formations","Sunset viewpoints"]
+}
+];
+
+const experiences = [
+{
+id:"e1",
+title:"Into Saudi Equestrian Culture",
+city:"Riyadh",
+guideId:"g3",
+date:"2026-02-02",
+time:"04:30 PM",
+duration:"3 hours",
+meeting:"Diriyah Gate — Main entrance",
+includes:["Stable visit","Basics of horsemanship","Heritage talk"],
+price:420,
+type:"equestrian"
+},
+{
+id:"e2",
+title:"Al-Balad Through Local Eyes",
+city:"Jeddah",
+guideId:"g1",
+date:"2026-02-05",
+time:"06:10 PM",
+duration:"2.5 hours",
+meeting:"Bab Makkah — old gate",
+includes:["Historic alleys","Local stories","Photo spots"],
+price:280,
+type:"balad"
+},
+{
+id:"e3",
+title:"Arabic Calligraphy Experience",
+city:"Jeddah",
+guideId:"g2",
+date:"2026-02-08",
+time:"07:30 PM",
+duration:"2 hours",
+meeting:"Art studio — Al-Andalus district (pin shared after booking)",
+includes:["Tools & ink","Write your name","Take-home card"],
+price:260,
+type:"calligraphy"
+},
+{
+id:"e4",
+title:"Falconry Introduction (Seasonal Practice)",
+city:"Riyadh",
+guideId:"g3",
+date:"2026-02-12",
+time:"05:00 PM",
+duration:"2.5 hours",
+meeting:"Desert camp — shared location",
+includes:["Falcon handling basics","Cultural etiquette","Tea session"],
+price:540,
+type:"falconry"
+}
+];
+
+// ===== Utilities =====
+function toast(msg){
+const t = document.getElementById('toast');
+t.textContent = msg;
+t.style.display = 'block';
+clearTimeout(window.__tmt);
+window.__tmt = setTimeout(()=> t.style.display='none', 3200);
+}
+
+function formatMoneySAR(n){
+return "SAR " + Number(n).toLocaleString('en-US');
+}
+
+function stars(r){
+const full = Math.floor(r);
+const half = (r - full) >= 0.5;
+let s = "★".repeat(full);
+if(half) s += "½";
+return s;
+}
+
+function haversineKm(lat1, lng1, lat2, lng2){
+const R = 6371;
+const dLat = (lat2-lat1) * Math.PI/180;
+const dLng = (lng2-lng1) * Math.PI/180;
+const a = Math.sin(dLat/2)**2 +
+Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLng/2)**2;
+return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+function guideById(id){ return guides.find(g => g.id===id); }
+
+// ===== Render Guides =====
+function renderGuides(){
+const el = document.getElementById('guideList');
+el.innerHTML = "";
+guides.forEach(g=>{
+const initials = g.name.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase();
+const on = g.onDuty ? `<span class="chip">● Online • radius ${g.radiusKm} km</span>` : `<span class="chip" style="border-color:rgba(251,113,133,.35);color:#ffd1db">● Offline</span>`;
+const div = document.createElement('div');
+div.className = "panel";
+div.innerHTML = `
+<div class="guide">
+<div class="avatar">${initials}</div>
+<div style="width:100%">
+<h4>${g.name}</h4>
+<div class="meta">${g.city} • ${g.languages.join(" / ")} • <span class="stars">${"★".repeat(Math.round(g.rating))}</span> ${g.rating} (${g.reviews} reviews)</div>
+<div style="margin-top:8px" class="kvs">
+<span class="kv">SAR ${g.priceHour}/hour</span>
+<span class="kv">${g.specialties[0]}</span>
+<span class="kv">${g.specialties[1]}</span>
+</div>
+<div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+<div style="display:flex;gap:8px;flex-wrap:wrap">${on}</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="btn secondary" type="button" onclick="focusGuide('${g.id}')">Show on map</button>
+<button class="btn" type="button" onclick="requestGuide('${g.id}')">Request booking</button>
+</div>
+</div>
+</div>
+</div>
+`;
+el.appendChild(div);
+});
+}
+
+function requestGuide(id){
+const g = guideById(id);
+toast(`Booking request sent (demo) to ${g.name}.`);
+}
+
+// ===== Render Experiences =====
+function svgFor(type){
+// lightweight SVG placeholders
+if(type==="equestrian"){
+return `
+<svg viewBox="0 0 800 350" preserveAspectRatio="none" aria-hidden="true">
+<rect width="800" height="350" fill="rgba(52,211,153,.14)"/>
+<path d="M70 260 C 170 170, 240 170, 300 220 C 350 260, 420 260, 470 220 C 520 180, 610 190, 720 250"
+fill="none" stroke="rgba(255,255,255,.18)" stroke-width="14" stroke-linecap="round"/>
+<circle cx="210" cy="170" r="34" fill="rgba(255,255,255,.12)"/>
+<rect x="520" y="90" width="220" height="34" rx="17" fill="rgba(0,0,0,.12)" stroke="rgba(255,255,255,.14)"/>
+</svg>`;
+}
+if(type==="balad"){
+return `
+<svg viewBox="0 0 800 350" preserveAspectRatio="none" aria-hidden="true">
+<rect width="800" height="350" fill="rgba(167,243,208,.10)"/>
+<rect x="90" y="110" width="160" height="170" rx="16" fill="rgba(255,255,255,.10)"/>
+<rect x="270" y="80" width="190" height="200" rx="16" fill="rgba(255,255,255,.08)"/>
+<rect x="480" y="130" width="230" height="150" rx="16" fill="rgba(255,255,255,.06)"/>
+<rect x="140" y="80" width="520" height="34" rx="17" fill="rgba(0,0,0,.12)" stroke="rgba(255,255,255,.12)"/>
+</svg>`;
+}
+if(type==="calligraphy"){
+return `
+<svg viewBox="0 0 800 350" preserveAspectRatio="none" aria-hidden="true">
+<rect width="800" height="350" fill="rgba(52,211,153,.10)"/>
+<path d="M120 240 C 220 110, 320 290, 420 160 C 520 40, 610 310, 700 140"
+fill="none" stroke="rgba(255,255,255,.18)" stroke-width="12" stroke-linecap="round"/>
+<rect x="120" y="80" width="560" height="34" rx="17" fill="rgba(0,0,0,.12)" stroke="rgba(255,255,255,.14)"/>
+</svg>`;
+}
+// falconry
+return `
+<svg viewBox="0 0 800 350" preserveAspectRatio="none" aria-hidden="true">
+<rect width="800" height="350" fill="rgba(167,243,208,.10)"/>
+<path d="M140 230 C 220 180, 260 120, 320 150 C 380 180, 420 260, 520 220 C 620 180, 660 110, 720 140"
+fill="none" stroke="rgba(255,255,255,.18)" stroke-width="12" stroke-linecap="round"/>
+<circle cx="300" cy="150" r="18" fill="rgba(255,255,255,.14)"/>
+<rect x="140" y="80" width="520" height="34" rx="17" fill="rgba(0,0,0,.12)" stroke="rgba(255,255,255,.14)"/>
+</svg>`;
+}
+
+function renderExperiences(){
+const el = document.getElementById('experienceCards');
+el.innerHTML = "";
+experiences.forEach(e=>{
+const g = guideById(e.guideId);
+const card = document.createElement('div');
+card.className = "card";
+card.innerHTML = `
+<div class="img">${svgFor(e.type)}</div>
+<div class="body">
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+<strong style="font-size:16px">${e.title}</strong>
+<span class="kv">${e.city}</span>
+</div>
+<div class="muted" style="margin-top:6px">
+Guided by <strong>${g.name}</strong> • ${g.languages.join(" / ")} • <span class="stars">${"★".repeat(Math.round(g.rating))}</span> ${g.rating}
+</div>
+
+<div class="kvs">
+<span class="kv">Date: ${e.date}</span>
+<span class="kv">Time: ${e.time}</span>
+<span class="kv">Duration: ${e.duration}</span>
+<span class="kv">Meeting: ${e.meeting}</span>
+</div>
+
+<div class="muted" style="margin-top:10px">
+Includes: ${e.includes.join(" • ")}
+</div>
+
+<div class="price">
+<div>${formatMoneySAR(e.price)} <small>/ per person</small></div>
+<small>Demo listing</small>
+</div>
+
+<div class="actions">
+<button class="btn secondary" type="button" onclick="focusGuide('${g.id}')">Show guide on map</button>
+<button class="btn" type="button" onclick="requestExperience('${e.id}')">Request booking</button>
+</div>
+</div>
+`;
+el.appendChild(card);
+});
+}
+
+function requestExperience(id){
+const e = experiences.find(x=>x.id===id);
+toast(`Booking request sent (demo) for "${e.title}".`);
+}
+
+// ===== Map =====
+let map, guideMarkers = new Map(), userMarker=null, lastNearestId=null;
+
+function initMap(){
+map = L.map('map', { zoomControl:true }).setView([21.5433, 39.1728], 11);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+// add guide pins
+guides.forEach(g=>{
+const pinColor = g.onDuty ? 'green' : 'red';
+const marker = L.marker([g.lat, g.lng], { title:g.name })
+.addTo(map)
+.bindPopup(popupForGuide(g, pinColor));
+guideMarkers.set(g.id, marker);
+});
+}
+
+function popupForGuide(g, pinColor){
+const status = g.onDuty ? "Online" : "Offline";
+const statusColor = g.onDuty ? "#a7f3d0" : "#ffd1db";
+return `
+<div style="font-family:Inter,Arial;min-width:240px">
+<div style="font-weight:800;font-size:14px">${g.name}</div>
+<div style="font-size:12px;opacity:.9;margin-top:2px">${g.city} • ${g.languages.join(" / ")}</div>
+<div style="margin-top:6px;font-size:12px;color:${statusColor}">
+● ${status} • radius ${g.radiusKm} km
+</div>
+<div style="margin-top:8px;font-size:12px">
+<strong>${g.rating}</strong> (${g.reviews} reviews) • <strong>SAR ${g.priceHour}</strong>/hour
+</div>
+<div style="margin-top:8px;font-size:12px;opacity:.9">
+${g.specialties.slice(0,3).map(s=>`• ${s}`).join("<br/>")}
+</div>
+<div style="margin-top:10px">
+<button style="padding:8px 10px;border-radius:10px;border:1px solid rgba(0,0,0,.15);background:#34d399;font-weight:800;cursor:pointer"
+onclick="window.__requestGuideFromPopup('${g.id}')">Request booking</button>
+</div>
+</div>
+`;
+}
+
+window.__requestGuideFromPopup = (id) => requestGuide(id);
+
+function focusGuide(id){
+const g = guideById(id);
+const m = guideMarkers.get(id);
+map.setView([g.lat, g.lng], 13);
+m.openPopup();
+toast(`Showing ${g.name} on the map.`);
+}
+
+function setLocText(enabled, msg){
+document.getElementById('locText').textContent = enabled ? msg : msg;
+document.getElementById('locStatus').style.color = enabled ? '#a7f3d0' : '#ffd1db';
+}
+
+function enableLocation(){
+if(!navigator.geolocation){
+toast("Geolocation is not supported on this device.");
+return;
+}
+toast("Requesting your location…");
+navigator.geolocation.getCurrentPosition(
+(pos)=>{
+const lat = pos.coords.latitude;
+const lng = pos.coords.longitude;
+setLocText(true, "Enabled");
+placeUser(lat,lng);
+findNearestGuide(lat,lng,true);
+},
+(err)=>{
+setLocText(false, "Denied / unavailable");
+toast("Location access was denied or unavailable.");
+},
+{ enableHighAccuracy:true, timeout:10000, maximumAge:0 }
+);
+}
+
+function placeUser(lat,lng){
+if(userMarker) userMarker.remove();
+userMarker = L.marker([lat,lng], { title:"You" }).addTo(map).bindPopup("You are here").openPopup();
+map.setView([lat,lng], 12);
+}
+
+function findNearestGuide(lat,lng,zoomTo){
+// only online guides count as “available”
+const online = guides.filter(g=>g.onDuty);
+let best = null, bestDist = Infinity;
+online.forEach(g=>{
+const d = haversineKm(lat,lng,g.lat,g.lng);
+if(d < bestDist){
+best = g; bestDist = d;
+}
+});
+
+if(!best){
+document.getElementById('nearestText').textContent = "No online guides";
+lastNearestId = null;
+toast("No online guides available right now (demo).");
+return;
+}
+
+lastNearestId = best.id;
+document.getElementById('nearestText').textContent = `${best.name} (${bestDist.toFixed(1)} km)`;
+
+if(zoomTo){
+const m = guideMarkers.get(best.id);
+map.setView([best.lat,best.lng], 13);
+m.openPopup();
+}
+toast(`Nearest guide: ${best.name} (${bestDist.toFixed(1)} km).`);
+}
+
+function openNearest(){
+if(!lastNearestId){
+toast("Enable location first to find the nearest guide.");
+return;
+}
+focusGuide(lastNearestId);
+}
+
+// ===== Init =====
+renderGuides();
+renderExperiences();
+initMap();
+
+// Buttons
+document.getElementById('btnUseLocation').addEventListener('click', enableLocation);
+document.getElementById('btnOpenNearest').addEventListener('click', openNearest);
+document.getElementById('btnFindNearest').addEventListener('click', (e)=>{
+// scroll + ask location
+setTimeout(()=>enableLocation(), 250);
+});
+</script>
+</body>
+</html>
